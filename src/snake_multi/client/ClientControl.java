@@ -6,14 +6,10 @@
 package snake_multi.client;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 import java.net.InetAddress;
 import javax.swing.JOptionPane;
-import javax.swing.Timer;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
@@ -29,6 +25,7 @@ import snake_multi.GameData;
  */
 public class ClientControl implements KeyListener {	
 	private SnakeClient snakeClient;
+        private CodePane codePane;
         private boolean runr, runl, runu, rund;
 	Client client = new Client(8192, 8192);
 	public int id = 0;
@@ -40,9 +37,11 @@ public class ClientControl implements KeyListener {
 	public ClientControl(SnakeClient snakeClient) {
 		this.snakeClient = snakeClient;
                 runr = true;
-                                runl = true;
-                                runu = true;
-                                rund = true;;
+                runl = true;
+                runu = true;
+                rund = true;
+                codePane = new CodePane(this);
+                              
 	}
 	
 	public void start() {
@@ -164,7 +163,9 @@ public class ClientControl implements KeyListener {
                                 rund = true;
 			}
 			
-		} else if (content.startsWith("ban")) {
+		} else if(content.startsWith("wrongcode")){
+                    client.stop();
+                }else if (content.startsWith("ban")) {
 			
 			snakeClient.board.clientStatus = content.substring(4);
 			snakeClient.board.repaint();
@@ -185,7 +186,7 @@ public class ClientControl implements KeyListener {
 		
 	}
 	
-	private void request(String content) {
+	public void request(String content) {
 		Request request = new Request();
 		request.content = content;
 		client.sendTCP(request);
@@ -226,9 +227,10 @@ public class ClientControl implements KeyListener {
                         rund = false;
 			
 		}else if (key == KeyEvent.VK_SPACE && !ingame) {
-			
+			codePane.setVisible(true);
 			// wanna play
-			request("gameStart");
+                        request("gameStart");
+			
 			
 		}
 		if (direction != -1 && ingame) {

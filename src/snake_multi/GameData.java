@@ -44,6 +44,8 @@ public class GameData {
     public final static String SCORE_LABEL = "Điểm: ";
     public final static int BONUS_FOOD_SCORE = 100;
     public final static int FOOD_SCORE = 10;
+    public final static Color WALL_COLOR = Color.black;
+    public final static int WALL_WIDTH = 1;
     
     //Hằng game
     public static final int GAME_WIDTH = 30;

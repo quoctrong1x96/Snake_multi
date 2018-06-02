@@ -118,106 +118,6 @@ public class ServerControl implements ActionListener {
         
 	}
 	
-	public void handleCommand(String command) {
-		
-		/** --- COMMANDS ---
-		 * 
-		 * freeze;[id]
-		 * slowdown;[id];[steps]
-		 * kamikaze;[id]
-		 * ban;[ip]
-		 * unban;[ip]
-		 * score;[id];[score]
-		 * speed;[tick]
-		 * addsolid;[x];[y]
-		 * remsolid;[x];[y]
-		 * clearsolids
-		 * 
-		 */
-		
-		System.out.println("Command: " + command);
-		
-		if (command.startsWith("freeze")) {
-			
-			Player player = game.players.get(Integer.valueOf(command.substring(7)) - 2);
-			if (player == null) return;
-			player.freeze = !player.freeze;
-			serverLog("Freezed player " + player.playerID);
-			
-		} else if (command.startsWith("slowdown")) {
-			
-			String temp[] = command.split(";");
-			Player player = game.players.get(Integer.valueOf(temp[1]) - 2);
-			if (player == null) return;
-			player.steps = Integer.valueOf(temp[2]);
-			serverLog("Slowed player " + player.playerID + " down to " + player.steps + " steps");
-			
-		} else if (command.startsWith("kamikaze")) {
-			
-			Player player = game.players.get(Integer.valueOf(command.substring(9)) - 2);
-			if (player == null) return;
-			player.kamikaze = player.direction;
-			serverLog("Locked direction of player " + player.playerID);
-			
-		} else if (command.startsWith("ban")) {
-			
-			String ip = command.substring(4);
-			banList.add(ip);
-			for (Connection c : server.getConnections()) {
-				if (c.getRemoteAddressTCP().getAddress().toString().equals(ip)) {
-					respond("ban;You were banned!", c);
-					c.close();
-				}
-			}
-			serverLog("Banned IP " + ip);
-			
-		} else if (command.startsWith("unban")) {
-			
-			String ip = command.substring(6);
-			if (banList.contains(ip)) banList.remove(ip);
-			serverLog("Unbanned IP " + ip);
-			
-		} else if (command.startsWith("score")) {
-
-			String temp[] = command.split(";");
-			Player player = game.players.get(Integer.valueOf(temp[1]) - 2);
-			if (player == null) return;
-			player.score = Integer.valueOf(temp[2]);
-			serverLog("Set score of player " + player.playerID + " to " + player.score);
-			
-		} else if (command.startsWith("speed")) {
-			
-			int tick = Integer.valueOf(command.substring(6));
-			timer.setDelay(tick);
-			serverLog("Changed game tick to " + tick);
-		} else if (command.startsWith("addsolid")) {
-
-			String temp[] = command.split(";");
-			game.solidsX.add(Integer.valueOf(temp[1]));
-			game.solidsY.add(Integer.valueOf(temp[2]));
-			serverLog("Added solid at X:" + temp[1] + " Y:" + temp[2]);
-			
-		} else if (command.startsWith("remsolid")) {
-
-			String temp[] = command.split(";");
-			for (int i = 0; i < game.solidsX.size(); i++) {
-				if (game.solidsX.get(i) == Integer.valueOf(temp[1]) && game.solidsY.get(i) == Integer.valueOf(temp[2])) {
-					game.solidsX.remove(i);
-					game.solidsY.remove(i);
-					serverLog("Removed solid at X:" + temp[1] + " Y:" + temp[2]);
-				}
-			}
-			
-		} else if (command.startsWith("clearsolids")) {
-			
-			game.solidsX.clear();
-			game.solidsY.clear();
-			serverLog("Removed all solids");
-			
-		}
-		
-	}
-	
 	private void handleRequest(String content, Connection connection) {
 		/** --- COMMANDS ---
 		 * 
@@ -262,7 +162,12 @@ public class ServerControl implements ActionListener {
 			
 			serverLog("Player " + newPlayer.playerID + " joined the game (Client " + connection.getID() + ")");
 			
-		} else if (content.startsWith("direction")) {
+		} else if(content.startsWith("join")){
+                    String code = content.substring(5);
+                    if (snakeServer.Code == null ? code == null : snakeServer.Code.equals(code)){
+                        respond("wrongcode",connection);
+                    }
+                }else if (content.startsWith("direction")) {
 			
 			String temp[] = content.split(";");
 			Player player = game.players.get(Integer.valueOf(temp[1]) - 2);

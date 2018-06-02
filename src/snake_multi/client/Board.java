@@ -7,7 +7,6 @@ package snake_multi.client;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.Random;
@@ -36,7 +35,7 @@ public class Board extends JPanel {
 		setPreferredSize(new Dimension(GameData.GAME_WIDTH * GameData.SNAKE_SIZE,
                                      GameData.GAME_HEIGHT*GameData.SNAKE_SIZE));
                 
-                setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+                setBorder(BorderFactory.createLineBorder(GameData.WALL_COLOR,GameData.WALL_WIDTH));
                 
                 //Khởi tạo main board mảng
                 mainBoard = new int[GameData.GAME_WIDTH][GameData.GAME_HEIGHT];

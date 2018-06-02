@@ -17,7 +17,9 @@ import javax.swing.JButton;
 import javax.swing.JTextPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.Random;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 /**
  *
@@ -32,6 +34,7 @@ public class SnakeServer extends JFrame {
 	public JButton buttonStart;
 	public JButton buttonStop;
 	public JTextPane textLog;
+        public String Code;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -87,6 +90,14 @@ public class SnakeServer extends JFrame {
 		textLog.setEditable(false);
 		scrollPane.setViewportView(textLog);
 		
+                JTextField txtCodeRandom = new JTextField();
+		txtCodeRandom.setEnabled(false);
+                Random rnd = new Random();
+                int code = 1000 + rnd.nextInt(8999);
+                txtCodeRandom.setText(Integer.toString(code));
+		contentPane.add(txtCodeRandom, BorderLayout.SOUTH);
+		txtCodeRandom.setColumns(10);
+                
 		DefaultCaret caret = (DefaultCaret)textLog.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		

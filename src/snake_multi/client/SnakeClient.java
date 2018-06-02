@@ -42,7 +42,7 @@ public class SnakeClient  extends JFrame implements MouseListener{
 
 	private static final long serialVersionUID = 1L;
 	
-        private Color bg_color = Color.decode("#efd39c");                       // Màu nền chung cho chương trình (hơi nâu xám)
+        private final Color bg_color = Color.decode("#efd39c");                       // Màu nền chung cho chương trình (hơi nâu xám)
         private JLabel new_game,quit,about,history;        // Nhãn button
         private Map<Integer,Image> images = new HashMap<>();       // Lưu danh sách image
         private Map<Integer,Icon> icon_images = new HashMap<>();    // Tương tự lưu danh sách icon
@@ -55,6 +55,7 @@ public class SnakeClient  extends JFrame implements MouseListener{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+                                        
 					SnakeClient frame = new SnakeClient();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -89,10 +90,10 @@ public class SnakeClient  extends JFrame implements MouseListener{
 		contentPane.add(board, BorderLayout.CENTER);
                 contentPane.add(about, BorderLayout.EAST);
 		pack();
-		
+                
 		handler = new ClientControl(this);
 		handler.start();
-		contentPane.setBorder(BorderFactory.createLineBorder(Color.black,10));
+                
         }
         
         /**
@@ -103,13 +104,10 @@ public class SnakeClient  extends JFrame implements MouseListener{
      * Cho thêm vào Panel Menu
      * @return Menu panel
     */ 
-    private JPanel createMenuPane(){
-                
-        //loadMenuIcons();                                            // Load Icon và hình ảnh từ cấu trúc resource
+    private JPanel createMenuPane(){      
+        //Load images
         loadBoardImages(0);
-        //loadBoardImages();
         loadMenuIcons(0);
-        
         //Khởi tạo Label với từng icon nền tương ứng (ID icon load từ resource)
         new_game = new JLabel(icon_images.get(GameData.NEW_BUTTON));
         about = new JLabel(icon_images.get(GameData.ABOUT_BUTTON));
@@ -142,7 +140,7 @@ public class SnakeClient  extends JFrame implements MouseListener{
     //Load hình ảnh cho bàn cờ và gán ID cho nó
     public void loadBoardImages(int style){
         Resource resource = new Resource();                             // Lưu resource
-        String[] resource_keys = {"chessboard","history_board","glow","glow2","history_title","mychessmate"};
+        String[] resource_keys = {"board","history_board","glow","glow2","history_title"};
         
         if(style==0){
             System.out.print("Đã load ảnh Board style 1\n");
@@ -153,7 +151,6 @@ public class SnakeClient  extends JFrame implements MouseListener{
             images.put(GameData.GLOW,ImageIO.read(resource.getResource(resource_keys[2])));
             images.put(GameData.GLOW2,ImageIO.read(resource.getResource(resource_keys[3])));            
             images.put(GameData.HISTORY_TITLE,ImageIO.read(resource.getResource(resource_keys[4])));
-            images.put(GameData.MYCHESSMATE,ImageIO.read(resource.getResource(resource_keys[5])));
         }catch(IOException ex){
         }        
     }
